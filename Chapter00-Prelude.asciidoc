@@ -1,10 +1,10 @@
 == Prelude
 
-_"Simplicity is the ultimate sophistication." - Leonardo DaVinci_ 
+_« La simplicité est la sophistication suprême.» - Léonard De Vinci_
 
-Software development for the modern web continues to evolve at a furious pace.  In recent years we've seen the trend of client-side state move to the server only to correct itself back again.  Despite JavaScript's obvious utility, two engineers are likely to yield three opinions regarding its worthiness.  HTML5 ushers an armada of rich-media and concurrency support right into the browser.  The proven, forty-year-old relational data model has fallen out of vogue to defiant NoSQL systems, and our version-control stores have undergone both implementation and paradigm overhauls.
+Le développement de logiciel pour le web moderne continue à évoluer à très grande vitesse. Ces dernières années nous avons vu l'état du client migrer vers le serveur avant de revenir en arrière. Malgré les services rendu par JavaScript, deux ingénieurs donneront probablement trois avis différents sur ses mérites. L'arrivée d'HTML5 s'accompagne du support d'une armada de contenus riches et de la concurrence directement dans le navigateur. Le modèle de données relationnel, valide depuis plus de quarante ans, n'est plus à la mode remplacé par les systèmes NoSQL pleins de morgue. Nos systèmes de gestion de configuration ont été remanié en profondeur tant du point de vue de l'implémentation que du paradigme.
 
-Our tools constitute an everchanging buffet of prescriptions, and sorting through the array of options presents a dizzying exercise.
+Nos outils deviennent des prescriptions pour un buffet en perpétuel changement, choisir parmi cette montagne de possibilités est un exercice vertigineux.
 
 In the meantime, engineers face the same central challenges raised by building any multi-user program; we like our code elegant and maintainable.  We need it to run efficiently and securely.  We must assert its correctness.
 
