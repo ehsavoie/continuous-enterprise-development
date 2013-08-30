@@ -1,30 +1,30 @@
-== Continuity
+== Continuité
 
-_"If everyone is moving forward together, then success takes care of itself." - Henry Ford_
+_"Lorsque nous marchons tous en symbiose et sommes concentrés sur le même objectif, le succès prend l’envol tout seul." - Henry Ford_
 
 === The Zen of Prevention
 
-At times it may feel that the universe mischievously conspires to destroy our work.  And to some extent this is true: nature doesn't like order.  This entropy manifests itself in many ways; we open a network socket, a router may fail.  We write to a file, the disk could fill up.  We fail to check for valid inputs, our program could blow up unexpectedly.
+Parfois, il nous semble que tout l'univers conspire machiavéliquement pour détruire notre travail. Et jusqu'à un certain point c'est vrai : la nature a horreur de l'ordre. Cette entropie se manifeste de plusizeurs façons. Nous ouvrons une connexion réseau et un routeur tombe en panne. Nous écrivons un fichier sur un disque et le disque est plein. Nous oublions de vérifier la validité des entrées d'un programme et il explose inopinément.
 
-Causes of potential failure are both infinite and inevitable.  As guardians of our own code quality, we're armed with two battle tactics: Be _reactive_, or be _proactive_.
+Les causes d'un échec potentiel sont infinies et inévitables. En tant que garants de la qualité de notre code, nous avons à notre disposition deux tactiques de combat : être _réactif_ et être _pro-actif_.
 
-==== Reactive Error Handling
+==== Gestion réactive des erreurs
 
-Colloquially referred to as "firefighting", a reactive position calls us to action.  In most cases, an undesirable situation has already presented itself, and now we're charged with fixing:
+Appellée communément "faire le pompier", être réactif nous demande d'agir. Dans la plupart des cas, une situation indésirable est déjà en place et nous sommes chargés de corriger :
 
-. The initial cause of the error, if under our control
-. The unprotected areas of code which allowed the cause to wreck greater havoc
-. Any resultant artifacts which persist after the error is encountered
+. La cause initale de l'erreur, si elle est sous notre contrôle.
+. Les zones sans protection de notre code qui ont laissé cette cause faire autant de dégats.
+. Les traces laissées par cette erreur dérrière elle.
 
-Anyone who's rifled through a database's binary log file to restore data to a consistent state can attest to the stressful waste of time incurred in handling emergency situations after a breach in expected execution. Dealing with issues as they arise also imposes a sense of immediacy; the activities of a normal workday may be suspended to address more pressing concerns.
+Quiconque ayant parcouru les journaux binaires d'une base de données afin de remettre les données dans un état consistent peut témoigner du stress et de la perte de temps produits par la gestion en urgence des situations dues à une erreur inateendue dans l'exécution. Gérer les erreurs au fur et à mesure qu'elles arrivent implique une notion d'urgence : les activités d'une journée de travail normale sont mises entre parenthèse pour traiter des problèmes plus pressants.
 
-Clearly, the reactive model is not our best option if it can be avoided.
+Clairement, le mode réactif n'est pas notre meilleure option, et il doit donc être évité autant que faire se peut.
 
-==== Proactive Quality Policies
+==== Les politiques pro-actives de qualité
 
-"Only YOU can prevent ... fires" has been the plea of the United States Forest Service since 1947, underscoring the importance of limiting factors that contribute to disaster _before_ they happen.  
+"VOUS seuls pouvez éviter ... les incendies" est l'appel du United States Forest Service depuis 1947, soulignant ainsi l'importance de limiter les facteurs de risques d'un désastre _avant_ qu'il n'arrive.
 
-Related to the prevention of errors is the issue of _containment_.  In the case of failure we'd like to know as soon as possible and handle the problem prior to its leaking into other areas of the system where it might cause greater harm.  Consider this simple bit of code:
+Cette prévention des erreurs est liée au problème du _confinement_.  En cas d'erreur, nous voudrions le savoir dès que possible et traiter le problème avant qu'il n'impacte les autres parties dus système où il pourrait créer beaucoup plus de dégats.  Considérons ce simple morceau de code :
 
 [source,java]
 ----
@@ -33,13 +33,13 @@ public String welcome(String name) {
 }
 ----
 
-Assume a user were to accidentally pass +null+ into the +welcome(String)+ method above.  The +String+ returned would be:
+Supposons qu'un utilisateur passe accidentellement +null+ à la méthode +welcome(String)+ ci-dessus.  La +String+ renvoyée serait alors :
 
 +Hello, null+
 
-This is because the http://docs.oracle.com/javase/specs/jls/se7/html/[_Java Language Specification Version 7_] states in http://docs.oracle.com/javase/specs/jls/se7/html/jls-15.html#jls-15.18.1[15.18.1] that concatenation with a single +String+ operand will result in String Conversion upon the other operand.  The +null+ pointer is therefore represented as the +String+ "null" according to the rules dictated by http://docs.oracle.com/javase/specs/jls/se7/html/jls-5.html#jls-5.1.11[5.1.11].
+Tout cela parce que les http://docs.oracle.com/javase/specs/jls/se7/html/[_Specifications du Langage Java Version 7_] précisent dans http://docs.oracle.com/javase/specs/jls/se7/html/jls-15.html#jls-15.18.1[le paragraphe 15.18.1] que la concaténation avec une seule +String+ comme opérande résultera en la conversion en String de l'autre opérande.  Le pointeur +null+ est donc représenté sous la forme de la +String+ "null" selon les règles définies par http://docs.oracle.com/javase/specs/jls/se7/html/jls-5.html#jls-5.1.11[le paragraphe 5.1.11].
 
-Likely this isn't the result we'd been expecting, but we've put ourselves in this position because we didn't _code defensively_.  Enhancing the +welcome(String)+ method to perform a _precondition check_ would raise an +Exception+ to the user and prohibit further normal execution flow:
+Assurément ce n'est pas le résultat que nous attendions, mais nous nous sommes mis nous mêmes dans cette situation car nous n'avons pas _codé de manière défensive_ .  Améliorer la méthode +welcome(String)+ pour réaliser une _vérification préconditionnelle_ lèverait une +Exception+ à l'utilisateur et ainsi bloquerait l'exécution normale de la suite :
 
 [source,java]
 ----
@@ -51,91 +51,90 @@ public String welcome(String name) {
 }
 ----
 
-This _fail-fast_ policy is equally important at runtime as it is during development.  Knowing how to limit our exposure to error remains a topic of vast research and refinement.  Luckily, the study of _Software Development Process_ provides us with a number of models upon which we may base our own practices.
+Cette politique de _défaillance rapide_ est aussi importante durant l'exécution que pendant le développement.  Savoir comment limiter notre exposition aux erreurs reste un vaste sujet de recherche et de raffinement.  Heureusement, l'étude du _process de développement logiciel_ nous fournit un certain nombre de modèles sur lesquels nous pouvons fonder nos pratiques.
 
-=== Software Development Processes
+=== Process de développement logiciel
 
-_Methodology.  Doctrine.  Paradigm._  Whatever we call it, our process (or absence of one!) is the script we follow on a day-to-day basis which guides our approach to building software.  Typically inspired by the central themes we believe contribute to quality and efficiency, a model for development workflow may be a powerful tool in keeping you and your team from heading down an unproductive path.  Many well-documented approaches exist, and knowing their motivations can help inform your own decisions in choosing a sensible model for your project.
+_Méthodologie.  Doctrine.  Paradigme._  Quelque soit le nom que nous lui donnaons, notre process (ou son absence ! ) est le script que nous suivons au jour le jour et qui guide notre approche pour réaliser un logiciel.  Typiquement inspirés des principaux thèmes auxquels nous croyons, un modèle de workflow de développement peut devenir un puissant outil pour éviter à vous et votre équipe de suivre des routes improductives. De nombreuses approches bien documentées existent, et connaitre les motivations qui sont derrière elles peut vous aider à choisir le 'bon' modèle pour votre projet.
 
-==== Serial Models
+==== Modèles séquentiels
 
-A _serial_, or _sequential_, process follows a linear path from project inception to completion.  As each stage in the development lifecycle comes to a close, the next one in turn is started.  Prior stages are typically not revisited, and this model is often visualized as a series of steps, like this:
+Un processus _séquentiel_ ou _en série_ suit un chemin linéaire depuis la naissance du projet jusqu'à son achèvement. Au fur et à mesure que chaque étape du cycle de vie du développement s'achève, la suivante commence. On en revient pas en général sur les étapes passées, et on visualise souvent ce modèle sous la forme d'une suite de marches :
 
 *** INSERT IMAGE ***
 
-Development flows from one stage to the next, forming the basis for the nickname "Waterfall", often-associated with serial models.  Also called "Big Design Up Front", this process relies heavily upon a full understanding of all requirements from the project onset.  The general theory supporting Waterfall Design is roughly "measure twice, cut once"; by doing an exhaustive evaluation of all moving parts, the goal is to reduce wasted time by avoiding the need to go back and make corrections.  In our opinion, this tack is best applied for projects with a long development cycle targeting a single release.
+Le développement passe une étape après l'autre, suivant ce que l'on appelle le "cycle en V", souvent associé aux modèles séquentiels. Appelé aussi "Débuter par une grande étape de conception", ce processus dépend fortement d'une compréhension complète de l'ensemble des exigences du projet dès le début. La théorie derrière le modèle en V pourrait être résumée en "mesurer deux fois, coupr en une seule fois". En évaluant tous les éléments pouvant bouger, le but est d'essayer de réduire les pertes de temps en évitant de revenir en arrière pour corriger. De notre point de vue, cela est adapté aux projets sur un cycle de développement long visant une seule version.
+Si ce modèle peut se fondre dans le moule du logiciel de détail, l'idée de ne jamais revenir en arrière à la base du processus séquentiel rend cette approche particulièrement fragile lorsqu'il faut écrire du code adaptable, ce modèle ne supporte pas la modifications des exigences. Pour cela il vaut mieux regarder des modèles à accès direct où il est possible de repasser par chacune des étapes de développement (voir de traiter plusieurs étapes en parallèle !).
 
-While this might fit the retail software mold, the never-go-back mentality of a serial process makes it a particularly brittle approach to building adaptable code; the model is not designed to support changing requirements.  For that we might be better-served looking to a more random-access model where any development phase may be revisited (or many may be in-process at the same time!)
+==== Modèles itératifs
 
-==== Iterative Models
-
-In stark contrast to the linear workflow prescribed by the Waterfall Model, there exist a suite of well-known iterative designs built to encourage change and promote parallelism.  By decomposing a large problem into more manageable components, we grant ourselves the option to solve each piece independently.  Additionally, we might opt to take broad swipes on a first pass, further refining our solutions in repeated cycles; this is where "iterative" processes obtain their name.
+A l'opposé du workflow linéaire proposé par le cycle en V existe un ensemble de modèles itératifs bien connus construits pour faciliter le changement et promouvoir la parallélisation. En découpant un problème en petits composants plus facilement gérables, nous permettons de résoudre chaque sous élément indépendamment. De plus nous pouvons aussi opter pour une approche grossière lors de notre première passe, affinant notre solution au fur et à mesure des cycles de développement; c'est de là d'ailleurs que les modèles "itératifs" tirent leur nom.
 
 ===== Extreme Programming
 
-Also known simply as "XP", _Extreme Programming_ is a discipline which introduces a feedback loop into each phase of the development process.  A practice which rose to popularity especially in the late 90s and early 2000s, XP lauds communication and other social aspects as centrally important themes.  Its workflow may look something like:
+Aussi connu sous le nom "XP", l'_Extreme Programming_ est une discipline qui introduit une boucle de retro-action à chaque étape du processus de développment. Une pratique devenue populaire plus particulièrement à la fin des années 90 et aux débuts des années 2000, XP accorde une grande importance à la communication et aux autres aspects sociaux.  Son workflow peut prendre la forme suivante :
 
 *** INSERT IMAGE ***
 
-While the full reasoning behind XP is detailed by Kent Beck's _Extreme Programming Explained: Embrace Change (Second Edition)_, some of its primary tenants may be boiled down to:
+Si le raisonnment complet qui a produit XP est décrit en détails dans le livre _Extreme Programming Explained: Embrace Change (Second Edition)_ de by Kent Beck, on peut résumer les idées principalesainsi :
 
-* Short development cycles
-* Daily, brief meetings
-* Pair Programming, Team Ownership and Accountability
-* Doing only what needs to be done now, deferring nonessential work until later
-* Garnering feedback from all stakeholders, not only programmers, early and often
-* Test-Driven Development
-** The approach of first writing automated tests, then correcting/augmenting main code until they pass
+* Des cycles de développement courts
+* Des réunions quotidiennes brèves
+* Pair Programming, responsabilisation et apropriation par l'équipe
+* Faire tout ce qu'il est nécessaire de faire mais reporter à plus tard tout ce qui n'est pas essentiel
+* Recueillir les retours de tous les participants, pas seulement les développeurs, tôt et fréquemment
+* Développement piloté par les tests
+** L'approche consitant à commencer par écrire des test automatisés puis de corriger / écrire le code principal jusqu'à ce qu'ils passent
 
-In fact, XP along with other models has both inspired and acts as an implementation of a larger collection of iterative policies as outlined by the http://agilemanifesto.org/[_Manifesto for Agile Software Development_].
+En fait, XP comme d'autres modèles est à la fois une source d'inspiration et une mise en œuvre d'un ensemble plus grand de méthodes itératives telles qu'elles sont définies dans http://agilemanifesto.org/[_Manifesto for Agile Software Development_].
 
-=== Testing _is_ Development
+=== Tester _c'est_ développer
 
 _"Move testing from the caboose to the engine." - Tim Ottinger, Senior Consultant, Industrial Logic_ 
 
-No matter the development method your team prescribes, and no matter how rigidly you adhere to its principles, eventually you're going to need to assert that your code works.  Of course you could handle this manually by deploying the application and letting a human user follow a scripted test plan, but wherever possible it's much more efficient and fail-proof to automate the test execution. So you're going to need to write some tests.
+Quelle que soit la méthode de développement prescrite par votre équipe et quelque soit votre adhésion à ses principes, au final vous allez devoir vérifier que votre code fonctionne. Bien sûr vous pourriez faire cela manuellement en déployant l'application et en laissant un humain suivre un plan de test, mais dès que cela est possible, il est beaucoup plus efficace et sûr d'automatiser l'exécution des tests. Donc vous allez devoir écrire des tests.
 
-But it's our opinion that testing is not simply about making sure your code works as expected.
+Mais nous pensons que tester ce n'est pas simplement vérifier que votre code fonctionne comme vous l'attendez.
 
-When you write tests, you're a _user_ of your API.  You'll see how intuitive it is to use, you'll discover gaps in documentation.  You might discover that it's too verbose or ugly, and most importantly: you can re-evaluate your design before it's too late. You're putting yourself in the shoes of your target audience.
+Quand vous écrivez des tests vous devenez un _utilisateur_ de votre API. Vous verrez combien son utilisation est intuitive. Vous découvrirez des manques dans la documentation. Vous pouvez même découvrir qu'elle est trop verbeuse ou affreuse, et encore plus important : vous pouvez ré-évaluer votre conception avant qu'il ne soit trop tard. Vous vous mettez à la place de votre audience.
 
-What's more, if you write tests alongside the development of your business logic, you might find your work to be more _enjoyable_.  You'll know when a feature is completed; you'll have the satisfaction of seeing concrete feedback in real-time.  Proponents of _Test-Driven Development_ even make the case for writing tests _before_ implementation.  In our experience, testing may be done alongside construction of the primary code such that the experience from one end of the tunnel can inform the other.
+De plus, si vous écrivez vos tests en même temps que vous développez la logique métier, il se peut que vous trouviez votre travail plus _agréable_.  Vous saurez quand une exigence est terminée; vous aurez la satisfaction d'avoir des retours concrets en temps réel. Les avocats du _Développement Piloté par les Tests_ vont jusqu'à écrire les tests _avant_ le code lui même. De part notre expérience, l'écriture des tests peut être faite durant la construction du code initial ce qui permet à chaque partie d'influer sur l'autre.
 
-Automated testing can take many forms, and we'll categorize a few for use throughout this text.
+Les tests automatisés peuvent avoir différentes formes, nous allons catégoriser certaines d'entre elles par la suite.text.
 
-=== Levels of Testing
+=== Les niveaux de test
 
-Proponents of test-oriented software development processes may qualify tests in one or more flavors:
+Les tenants des méthodes de développement orientées test trient les tests selon plusieurs catégories :
 
 * Acceptance
-** Asserts that code meets business requirements
-* Black-Box
-** Asserts the contract of an API is working without respect to its internals
-* Compatibility
-** Asserts that code plays nicely with one or more outside components; for instance a web application may need to display correctly on Internet Explorer, Chrome, Firefox, Safari, and mobile devices.
-* Functional
-** Asserts that code meets the technical requirements derived from business requirements; ie. that all *functions* are working as expected
-* Load / Stress / Performance
-** Asserts and measures how a system handles input under load, and how gracefully it degrades with increased traffic
+** Vérifie que le code correpond aux exigences métier
+* Boite noire
+** Vérifie qu'une API fonctionne selon le contrat sans se préoccuper de ce qu'il se passe à l'intérieur
+* Compatibilité
+** Vérifie que le code se comporte bien avec un ou plusieurs composants externes. Par exempleune application web doit s'afficher correctement sur Internet Explorer, Chrome, Firefox, Safari et les mobiles.
+* Fonctionnel
+** Vérifie que le code correspond aux exigences techniques qui découlent des exigences métier; ie. que toute les *fonctions* se comportent comme attendu
+* Charge / Stress / Performance
+** Vérifie et mesure comment un système traite les entrées sous charge, et comment il se dérade avec l'augmentation du traffic
 * Regression
-** Asserts that previously-identified errors have been corrected or that existing features remain to function
-* Smoke
-** A subset of a full test suite, intended to run quickly and provide feedback that the system is generally intact from a simplistic level
-* White-Box
-** Asserts that an API is working as contracted, taking into concern implementation-specific data structures and constructs.
+** Vérifie que les erreurs découvertes précédemment ont bien été corrigées ou que les fonctionnalités exitantes sont toujours utilisables
+* Fumigatoire
+** Un sous-ensemble de tous les cas de tests, prévus pouir s'exécuter rapidement et s'assurer que les principales fonctions d'un système fonctionnent correctement, sans se préoccuper des détails fins
+* Boite blanche
+** Vérifie qu'une API fonctionne selon le contrat en prenant en compte les spécificités internes en termes de structures de données et de constructions.
 
-A well-tested application may have tests covering many of the above areas, and we may further organize these types according to scope.
+Une application bien testée peut avoir des tests couvrant plusieurs des catégories précédentes, et nous pouvons organiser ces types selon leur portée.
 
-==== Unit
+==== Unitaire
 
-The purpose of a unit test is to validate that a single functionality is operating as expected in isolation.  Unit tests are characterized as fast, simple, easy-to-run, and fine-grained.  They may dig into implementation details for use in _white-box testing.
+Le but d'un test unitaire est de valider qu'une unique fonctionnalité se comporte tel qu'attendu en isolation. Les tests unitaires sont caractérisés comme rapides, simplees, faciles à exécuter et fins. Ils peuvent creuser dans les détails d'implémentation pour un usage en mode _boite  blanche_.
 
-For instance, every Java object inherits the method +Object.hashCode()+ and the value equality test +Object.equals(Object)+.  By API contract, calls to +hashCode+ of equal-by-value objects must return equal, that is:
+Par exemple, chaque objet java hérite de la méthode +Object.hashCode()+ et de la méthode de tests d'égalité par valeur +Object.equals(Object)+.  Par contrat d'API, les appels à la méthode +hashCode+ et à l'égalité par valeur d'un objet doivent retourner le même résultat :
 
 [source,java]
 ----
 /**
- * Test bullet 2 of the hashCode contract as defined by:
+ * Test du point 2 du contrat de la méthode hashCode défini par:
  * http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html#hashCode()
 */
 public void testHashCodeOfEqualObjects() {
@@ -149,33 +148,32 @@ public void testHashCodeOfEqualObjects() {
 }
 ----
 
-The above test, implemented using the Java +assert+ keyword, is a classic example of a unit test; it checks for the smallest possible _invariant_ (in this case that the +equals()+ and +hashCode()+ implementations of +MyObject+ are working with respect to one another).  Many experts will advise that a unit test contains only one assertion; in our experience this is a fantastic guideline but as the above example illustrates, use common sense.  If more than one assertion is required to conclude that all participants in an invariant are in expected form, then use what's necessary.
+Le test ci-dessus, réalisé avec le mot-clef Java +assert+, est un exemple classique d'un test unitaire. Il vérifie l'_invariant_ le plus petit possible (dans ce cas que les implementations de +equals()+ et de +hashCode()+ par +MyObject+ fonctionnent correctement l'une par rapport à l'autre).  De nombreux experts recommanderont de n'avoir qu'une assertion par test unitaire. De par notre expérience c'est une règle fantastique mais comme l'exemple ci-dessus li'illustre bien, utiliser votre bon sens. Si plusieurs assertions sont nécessaires pour conclure que tous les participants d'un invariant sont dans l'état attendu, utilisez ce qu'il faut.
+Dans le cas où le test unitaire nécessite des entrées provenant d'autres composants, l'usage de _mock_ est une solution courante. Les mocks fournissent une implémentation alternative utilisée dans les tests afin de permettre au développeur de :
 
-In cases where a unit test may require inputs from unrelated components, the use of _mock objects_ is a common solution.  Mocks supply an alternate implementation used in testing which may help the developer to:
+* Simuler une condition d'erreur
+* Eviter de démarrer un processus couteux ou une longue pile d'exécution
+* Eviter de dépendre de systèmes tiers qui pourraient ne pas être très fiables (voir disponibles)pour exécuter des tests
+* Eviter de dépendre d'un mécanisme qui fournirait des valeurs non-reproductibles.
+** Par exemple un générateur de nombres aléatoires se basant sur l'heure courante.
 
-* Simulate an error condition
-* Avoid starting up an expensive process or code path
-* Avoid dependence upon a third-party system which might not be reliable (or even not available) for testing purposes
-* Avoid dependence upon a mechanism which supplies non-idempotent (non-repeatable) values.
-** For instance a random-number generator or something that relies on the current time
+Si les mocks ont toute leur place dans l'arsenal du testeur, dans le contexte du développement d'entreprise nous pensons que leur usage doit être limité. Java Enterprise Edition est basé sur un modèle à composants _POJO_ (Plain Old Java Object) ce qui nous permet d'instancier directement des Servlets, EJBs et beans CDI. Cela est très pratique pour valider la logique métirevia des appels simples. Cependant la vraie puissance de Java EE se trouve dans le _couplage faible_ entre les composants, or les mocks ne simulent pas bien comment le conteneur lie ces différentes pièces .  Pour tester complètement une application vous devez tester l pile d'exécution complète et pas uniquement votre code. Pour cela vous avez besoin d'une solution plus complète que ce que permettent les tests unitaires.
 
-While mocks absolutely have their place in the testing arsenal, in the context of Enterprise development it's our opinion that their use is to be limited.  The Java Enterprise Edition is based on a _POJO_ (Plain Old Java Object) component model which enables us to directly instantiate Servlets, EJBs, and CDI beans; this is great for validating business logic in simple calls.  However the true power of Java EE is in the _loose coupling_ between components, and mocks do not account for the linkage between these pieces that's provided by the container.  To fully test an application, you must test the whole runtime, not simply the code you've written on your own.  For that, we need a more comprehensive solution to validation than is allowed by Unit Tests.
+==== Intégration
 
-==== Integration
+Imaginez que nous souhaitions poser un tuyau pour faire passer de l'eau depuis un réservoir jusu'à une station d'épuration.  Les tests unitaires que nous avons décrits ci-dessus correspondrait au fait de vérifier que chacune des sections de tuyau est de bonne qualité et ne fuit pas.  Mais le tout est supérieur à la somme des parties : l'eau peut toujours s'échapper entre les sections.
 
-Imagine we'd like to build a pipe to carry water from a nearby reservoir to a treatment and purification facility.  The unit tests we'd described above would be responsible for ensuring that each section of the tube was free of leaks and generally of good quality.  But the whole is more than the sum of its parts: the opportunity for water escaping between the cracks still exists.
+Il en est de même avec le logiciel. Nous devons nous assurer que les composants s'intègrent bien les uns avec les autres. Cela est particulièrement vrai pour Java EE où l' _injection de dépendance_ est présente à tous les niveaux. C'est super de ne pas avoir un bean explicitement lié à un autre, mais au bout du compte nous dépendons d'un conteneur pour créer ces liens pour nous. Si nos métadonnées ou notre configuration sont incorrectes alors nos points d'injection peuvent ne pas être remplis comme nous l'attendons.  Cela peut produire des erreurs lors du déploiement ou pire ce qui nous impose d'avoir une couverture de test pour les intéractions entre les composants.
 
-And so it is with software; we must check that our components play nicely with one another.  This is especially true for Java EE where _dependency injection_ is a commonplace tool.  It's great that one bean not be explicitly bound to another, but eventually we rely upon a container to do the wiring for us.  If our metadata or configuration is incorrect, our injection points may not be filled as we're expecting.  This could result in a deployment-time exception or worse, making it imperative that we have test coverage for the interaction between components.
+Lorsque nous parlons de _tests d'intégration_ dans ce livre c'est dans le contexte d'un _conteneur_. Historiquement les intéractions avec un serveur d'application étaient notoiremment difficiles à tester. Pour cette raison, Java EE est devenu un gros mot pour beaucoup. C'est le but de ce texte que de clairement décrire les techniques pour construire des applications d'entreprise testables.  Alors que beaucoup peuvent voir cette discussion comme traitant des tests d'intégration, au contraire nous pensons qu'il s'agit plutôt de *développement* et que les tests d'intégration sont un bonus de cette équation.
 
-When we talk about _integration testing_ in this book, it's within the context of a _container_.  Historically, interaction with an application server has been notoriously difficult to test.  For many, Java EE has become a dirty term as a result.  It's the goal of this text to clearly delineate techniques for building enterprise applications in a testable manner.  While many may view this discussion as related to integration testing, instead we feel that it's more about *development* and integration testing is a valued part of that equation.
+D'un certain coté, les tests _font partie_ du développement.
 
-In that sense, testing _is_ development.
+=== Bases des frameworks de test
 
-=== Foundation Test Frameworks
+Comme vous pouvez l'imaginer, les _services du conteneur_ nous aident véritablement à réduire la complexité du code de notre application.  L'injection de dépendance nous libère de la création manuelle des liesn entre les composants, et des fonctionnalités comme la _sécurité déclarative_ et la _gestion des transactions_ nous permettent de ne pas avoir à mélanger ces problèmatiques techniques à notre code métier.  Cependant, rien n'est gratuit; le coût de l'aide apportée par un framework ou un serveur d'application est que nous avons ajouté un nouveau point d'intégration.  Et chaque point d'intégration doit être validé par un test d'intégration.
 
-As you might imagine, _container services_ really help us to cut down on the complexity in our application code.  Dependency Injection frees us from manual wiring while features like _declarative security_ and _transaction management_ keep us from weaving technical concerns into our business logic.  Unfortunately, nothing comes for free; the cost of enlisting an framework or application server's help is that we've now added another integration point.  And every integration point must be validated by an integration test.
-
-Java has built-in support for +java.lang.Assertion+ error and the +assert+ keyword, and these are fine tools when used in the right context.  Because assertions using +assert+ are only analyzed in the presence of the +-ea+ switch at launch of the Java runtime, you need not worry about the performance implications of running extra checks in a production environment with this support disabled.  For that reason, it makes sense to use +assert+ for testing internal code, for instance:
+Java supporte nativement les erreurs de type +java.lang.Assertion+ et le mot-clef +assert+ qui peuvent s'avérer des outils bien pratiques lorsqu'ils sont utilisés à bon escient.  Car les assertions utilisant +assert+ ne sont traitées que lorsque l'option +-ea+ est présente sur la commande de démaarage de la JVM. Vous n'avez donc pas à vous préoccuper de l'impact sur les performances des ces vérifications supplémentaires dans un environnement de productionlorsque cette fonction n'est pas activée. Pour cette raison cela a du sens d'utiliser +assert+ pour tester du code interne, par exemple :
 
 [source,java]
 ----
@@ -185,9 +183,9 @@ private String welcome(String name) {
 }
 ----
 
-Because the visibility of this code is +private+, we do not need to worry about doing precondition checks on end-user input; the parameter +username+ must be supplied by something _we_ have written.  Therefore this need not be tested in production.
+Ce code ayant la visibilité +private+, nous n'avons pas à nous préoccuper de la vérification pré-conditionnelles des entrées de l'utilisateur; le paramètre +username+ est fourni par du code que _nous_ avons écrit.  Et donc ce code ne doit pas être testé en production.
 
-Of course, assertions may help us along the way, but they're not *tests*.  Tests exercise a code path and validate one or more _post-conditions_.  For instance we might write the following client to validate that the public +welcome(String)+ example from the _Proactive Quality Policies_ section is working as we'd expect:
+Bien sûr, les assertions peuvent nous aider mais il ne s'agit pas de *tests*.  Les tests suivent un chemin d'exécution du code et valident une ou plusieurs _post-conditions_.  Par exemple nous pourrions écrire le code client suivant pour vérifier que la méthode +welcome(String)+ de la section _Politiques proactives de qualité_ se comporte comme nous l'attendons :
 
 [source,java]
 ----
@@ -233,15 +231,15 @@ public class WelcomeJDKTest {
 }
 ----
 
-Not too terrible as far as code coverage goes; we've ensured that the +welcome+ method functions as we'd expect, and we even check that it bans +null+ input at the right place, before that null pointer has a chance to make things more complicated later.
+Pas terrible en termes de couverture de code; nous nous sommes assurés que la méthode +welcome+ fonctionne comme attendu et nous avons même vérifier qu'elle rejette l'entrée +null+ au bon endroit, avant qu'il ne puisse rendre les choses plus compliquées par la suite.
 
-But our signal-to-noise ratio is way off when we write our own +main(String[])+-based test clients.  Look at all the boilerplate involved just to get the execution running, as compared with the test code itself!  Just as we use frameworks and component models to cut the redundant, rote bits in our business logic, we can take advantage of some popular libraries to help us slim our tests.
+Mais le rapport signal sur bruit est très mauvais lorsque nous devons écrire nos propres clients de test avec la méthode +main(String[])+.  Regardez tout le code inintéressant que nous avons du écrire pour exécuter les tests par rapport au code de test en lui-même ! Comme nous utilisons frameworks et modèles à composants pour éliminer les octects redondants et inutiles de notre logique métier, nous pouvons profiter de bibliothèques populaires pour alléger nos tests.
 
 ==== JUnit
 
-The http://www.junit.org/[JUnit] Test Framework is one of the most widely-known testing frameworks for Java.  Initially ported from http://en.wikipedia.org/wiki/Kent_Beck[Kent Beck's] work in testing the Smalltalk programming language, JUnit is the most-downloaded artifact in the http://search.maven.org/[Maven Central Repository] outside of libraries used to run Maven itself (as of August 2012).
+Le framework de test http://www.junit.org/[JUnit] Test l'un des frameworks de test les plus connus pour Java. Initiallement porté depuis le travail de http://en.wikipedia.org/wiki/Kent_Beck[Kent Beck] pour tester le langage de programmation Smalltalk, JUnit est l'artéfact le plus téléchargé depuis le dépôt http://search.maven.org/[Maven Central Repository] en dehors des bibliothèques utilisées pour exécuter Maven lui même (en Août 2012).
 
-Refactoring our +WelcomeJDKTest+ above to use JUnit might look a little like this:
+Si nous reprenons notre code +WelcomeJDKTest+ ci-dessus en utilisant JUnit nous pourrions obtenir quelquechose de proche de ceci :
 
 [source,java]
 ----
@@ -277,25 +275,25 @@ public class WelcomeJUnitTest {
 }
 ----
 
-The first benefit we get is that we don't need a +main(String[])+ method, and we don't need to manually call upon our test methods.  Instead, JUnit will dutifully execute for us any lifecycle (ie. +@Before+) or test (annotated with +@Test+) methods and report the results back to its initial runner.  Secondly, we're given access to the JUnit library, for instance a set of convenience methods in +org.junit.Assert+, to help us reduce the amount of code we'll need to write assertions.
+Le premier bénéfice que nous obtenons est que nous n'avons plus besoin d'une méthode +main(String[])+ et nous n'avons plus besoin d'appeler manuellement nos méthodes de test.  En effet, JUnit exécutera consciencieusement tout cycle de vie (ie. +@Before+) ou les méthodes (annotés avec +@Test+) de test et rapportera les résultats à son exécuteur initial.  Deuxièmement, nous avons accès à la bibliothèque JUnit, par exemple un ensemble de méthodes utilitaires dans +org.junit.Assert+, pour nous aider à réduire la quantité de code nécessaire pour écrire nos assertions.
 
-JUnit also has widespread IDE support, making test execution during development much easier.  For instance, consider the context menu available in Eclipse:
+JUnit est aussi très bien supporté par les IDE, rendant l'exécution des tests durant le développement beaucoup plus facile.  Par exemple, regardez le menu contextuel disponible dans Eclipse :
 
 image:images/ch01-continuity/runas_junit.png["JUnit IDE Runner Integration"]
 
-As opposed to our homebrewed +main(String[])+ test client, JUnit supports reporting.  In the IDE this may appear graphically:
+A l'opposé de notre client test +main(String[])+ fait main, JUnit produit des rapports.  Dans l'IDE ils peuvent être rendus graphiquement :
 
 image:images/ch01-continuity/junit_test_execution.png["JUnit IDE Reporting Integration"]
 
-Often we'll make use of a _continuous integration server_ to handle our builds and provide an auditable view of the codebase over time.  During this more formal build process, output may be directed to an XML file for analysis by plugins.  This can be very helpful in tracking progress of the failing and total number of tests, for instance graphically on the http://jenkins-ci.org/[Jenkins Continuous Integration Server]:
+Souvent nous ferons usage d'un _serveur d'intégration continue_ pour gérer nos builds et fournir une vue de l'audit du code au cours du temps.   Durant ce processus de build plus formel, les résultats peuvent être produits sous la forme d'un fichier XML qui peut ête analysé par des plugins.  Cela peut être pratique pour suivre l'évolution du nombre de tests et du nombre de tests en échec', comme par exemple sur http://jenkins-ci.org/[Serveur d'Intégration Continue] :
 
 image:images/ch01-continuity/ci_test_trend.png["Continuous Integration Test Reporting"]
 
-Of course, JUnit is not the only kid on the block when it comes to test frameworks.
+Bien sûr, JUnit n'est pas le seul framework de test sur la place.
 
 ==== TestNG
 
-If JUnit sets the standard for simplicity in Java testing, http://testng.org/doc/index.html[TestNG] touts greater flexibility to the developer by offering an arguably greater featureset.  While the differences between the two frameworks are beyond the scope of this text, there's quite a bit of overlap in concept.  Refactoring our test for TestNG should look familiar:
+Si JUnit incarne la simplicité pour les tests en Java, http://testng.org/doc/index.html[TestNG] vante une plus grande flexibilité pour les développeurs en offrant un plus grand ensemble de fonctionnalités.  Cependant discuter les différences entre ces deux frameworks est au delà du cadre de ce livre, et les concepts sous jacents restent très proches.  La réécriture de notre test avec TestNG devrait vous paraitre familière :
 
 [source,java]
 ----
@@ -324,35 +322,35 @@ public class WelcomeTestNGTest {
 }
 ----
 
-Some of the parameter orders and API names for the annotations have changed, but the concept remains: write less, and let the framework wire up the call stack.
+L'ordre de certains paramètres et les noms des annotations de l'API ont changés mais le concept reste : écrire moins de code et laisser le framework gérer la pile d'appel.
 
-IDE Integration, while not standard for Eclipse Juno, is http://testng.org/doc/download.html[simple enough to install] and provides a GUI runner as we've seen with JUnit:
+L'intégration avec les IDE existe même si elle n'est pas fournie avec Eclipse Juno, reste http://testng.org/doc/download.html[relativement simple à installer] et fournit un exécuteur graphique comme celui que nous avons vu avec JUnit:
 
 image:images/ch01-continuity/testng_test_execution.png["TestNG IDE Runner Integration"]
 
-=== Continuous Development
+=== Développement continu
 
-Followers of Extreme Programming and Agile methodologies are likely to be familiar with http://martinfowler.com/articles/continuousIntegration.html[Continuous Integration], a practice which advocates frequent patching of the upstream development branch in order to catch errors as they're introduced.  Such an approach involves:
+Les partisans de l'Extreme Programming et des méthodologies Agile doivent connaitre l' http://martinfowler.com/articles/continuousIntegration.html[Intégration Continue], une pratique qui défend une évolution rapide du code source de la branche de développement pour détecter les erreurs au fur et à mesure qu'elles sont introduites. Une telle approche implique :
 
-* An authoritative source repository (which is *not* at odds with decentralized version control systems, as we'll soon see)
-* A comprehensive test suite
-* An automated build system
-* Automated deployment
+* Un dépôt de code source de référence (ce qui n'est pas *opposé* aux systèmes de gestion de configuration décentralisés, comme nous le verrons bientôt)
+* Une suite de tests complète
+* Un système de build automatisé
+* Un déploiement automatisé
 
-These general rules are applicable in most any modern language, are tool-agnostic, and are widely-accepted throughout the development community.
+Ces règles générales sont applicables pour la plupart des langages modernes, elles ne sont pas liées à des outils et sont largement acceptées par la communauté du développement.
 
-So why the _Continuous Development_ title of this book?
+Donc, pourquoi le titre de _Développement continu_ pour ce livre ?
 
-In addition to the successful ideology and theory espoused by the Agile community, we'll be looking at concrete tools and projects both within and extending the Java Enterprise Platform to best address the real-world concerns of an Enterprise Java Developer.
+En plus de l'idéologie et de la théorie adoptées par la communauté Agile, nous regarderons des outils et des projets concrets à la fois dans et en dehors de la plateforme Java EE pour mieux adresser les préoccupations réelles du développeur Java d'entreprise.
 
-The authoritative Git repository containing the book and example application source for this text is hosted by our friends at http://www.github.com[GitHub] at https://github.com/arquillian/continuous-enterprise-development[https://github.com/arquillian/continuous-enterprise-development].  The accompanying book site is located at http://continuousdev.org[http://continuousdev.org], and the official Twitter channel is http://twitter.com/ContinuousDev[@ContinuousDev].  The authors may be reached at authors@continuousdev.org.
+Le dépôt Git de référence contenant le livr et le code source de l'application exemple est hébergé par nos amis de http://www.github.com[GitHub] à l'adresse https://github.com/arquillian/continuous-enterprise-development[https://github.com/arquillian/continuous-enterprise-development].  Le site compagnong de ce livre est situé à l'adresse http://continuousdev.org[http://continuousdev.org] et le compte Twitter officiel est http://twitter.com/ContinuousDev[@ContinuousDev].  Les auteurs peuvent être contactés via l'adresse email authors@continuousdev.org.
 
-All contents of the book's repository are licensed under http://creativecommons.org/licenses/by-sa/2.0/['Creative Commons Attribution-ShareAlike 2.0 Generic'], and we invite the community at large to contribute work including feature requests, typographical error corrections, and enhancements via our https://github.com/arquillian/continuous-enterprise-development/issues[GitHub Issue Tracker].
+Tous les contenus du dépôt de ce livre sont sous la licence http://creativecommons.org/licenses/by-sa/2.0/['Creative Commons Attribution-ShareAlike 2.0 Generic'], a et nous invitons la communauté à contribuer soit par des demandes d'évolution, la correction des erreurs typographiques et des améliorations via notre https://github.com/arquillian/continuous-enterprise-development/issues[gestionnaire de bugs].
 
-The print release of the book and its example is set to be given the Git tag of +1.0.0+ in the authoritative repository, and development will continue thereafter in the +master+ branch to correct errata and add supplmentary material including new chapters and use cases.  The community is welcome to suggest or request topics for additional coverage.
+La version papier de ce livre et des exemples correspond au tag +1.0.0+ dans le dépôt Git de référnce, et le développement se poursuivre dans la branche +master+ pour corriger les erreurs et ajouter des matériaux supplémentaires, nouveaux chapitres et cas d'utilisation.  La communauté est encouragée pour sggérer ou demander le traitement de nouveaux sujets.
 
-The example application accompanying the use cases raised in this book is called GeekSeek, and is publicly-available at http://geekseek.continuousdev.org[http://geekseek.continuousdev.org].  The source is located in this repository under +code/application+, and instructions for building, testing, and running locally are detailed in https://github.com/arquillian/continuous-enterprise-development/blob/master/Chapter04-RequirementsAndExampleApplication.asciidoc[Chapter 4].  The build jobs for the application are kindly powered by http://www.cloudbees.com[CloudBees] at https://arquillian.ci.cloudbees.com/job/GeekSeek-wildfly/[https://arquillian.ci.cloudbees.com/job/GeekSeek-wildfly/] and https://arquillian.ci.cloudbees.com/job/GeekSeek-jbosseap/[https://arquillian.ci.cloudbees.com/job/GeekSeek-jbosseap/].
+L'application exemple qui accompagne les cas d'utilisation traités par ce livre s'appelle GeekSeek et est publiquement disponible à l'adresse http://geekseek.continuousdev.org[http://geekseek.continuousdev.org].  Le code source est disponible dans ce dépôt dans le dossier +code/application+ et les instructions pour la construire, la tester et l'exécuter localement sont définies dans https://github.com/arquillian/continuous-enterprise-development/blob/master/Chapter04-RequirementsAndExampleApplication.asciidoc[Chapitre 4].  Les taches de build de l'application sont gentillement exécutées par http://www.cloudbees.com[CloudBees] aux adresses https://arquillian.ci.cloudbees.com/job/GeekSeek-wildfly/[https://arquillian.ci.cloudbees.com/job/GeekSeek-wildfly/] et https://arquillian.ci.cloudbees.com/job/GeekSeek-jbosseap/[https://arquillian.ci.cloudbees.com/job/GeekSeek-jbosseap/].
 
-We welcome your contributions and hope you find the material covered here to be of interest and benefit to your work and career in testable enterprise development.
+Nous encourageons toutes vos contributions et nous espérons que vous touverez le matériel traité ici intéressant et que vous en tirerez bénéfice dans votre travail et votre carrière dans le développement d'entreprise testable.
 
-The first step is to meet some of the key players who will become thematic in this text.
+La première étape est de rencontrer les principaux acteurs qui vont constituer ce livre.
